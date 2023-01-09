@@ -1,72 +1,43 @@
 # Clear global environment
 rm(list = ls())
 
-# Tidy up
-if (interactive()) clc()  # Clear console
-if (interactive()) clf()  # Close figures
-
-# Set working directory to sourced file
-setwd("/scicore/home/scicore/cavelan/git/r-workflow")
-
-# Load all required packages, installing them if required
-pacman::p_load(char = c("foreach", "doParallel"))
-
 # load local files
 source("pacman.R")
 source("run.R")
 source("extract.R")
 
-# if using the sciCORE cluster:
-sciCORE = list(
-    use = TRUE,
-    account = "penny",
-    jobName = "OpenMalaria"
-)
+# Load all required packages, installing them if required
+pacman::p_load(char = c("foreach", "doParallel"))
+
+# sciCORE Slurm parameters:
+sciCORE = list(use = TRUE, account = "penny", jobName = "OpenMalaria")
 
 # OpenMalaria
-om = list(
-    version = 44,
-    path = "/home/acavelan/git/om-dev/fitting/om/openMalaria-44.0"
-)
+om = list(version = 44, path = "/home/acavelan/git/om-dev/fitting/om/openMalaria-44.0")
 if (sciCORE$use == TRUE) om$path = "/scicore/home/chitnis/GROUP/openMalaria-44.0/"
 
-# Scaffold xml to use
-scaffolds = list(
-    "R0000GA"
-)
+# Scaffold xmls to use
+scaffolds = list("R0000GA")
 
 # run scenarios, extract the data, or both
-do_run = FALSE
-do_extract = TRUE
+do = list(run = FALSE, extract = TRUE)
 
-# name of the experiment folder
-experiment = 'test'
+# Fixed parameters for all xmls
+experiment = 'test' # name of the experiment folder
+pop_size = 10000 # number of humans
+start_year = 2000 # start of the monitoring period
+end_year = 2020 # end of the monitoring period
+burn_in = start_year - 30 # additional burn in time
+access = 0.2029544 # 5-day probability of access to care
+outdoor = 0.2
+indoor = 1.0 - outdoor
 
-# Fixed
-pop_size = 10000
-burn_in_years = 30
-access = 0.2029544 # 5-day probability
-start_year = 2000
-end_year = 2020
-outdoor_biting = 0.2
-
-# Variable
+# Varying parameters (combinatorial experiment)
 seeds = 10
 modes = c("perennial", "seasonal")
 eirs = c(0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 22, 25, 30, 35, 40, 45, 50, 65, 70, 80, 90, 100, 120, 150, 200, 250, 500, 750, 1000)
 
-# Test (12 scenarios with 2000 popsize); uncomment to overwrite other settings and do a quick test
-#pop_size = 2000
-#eirs = c(2, 10, 20, 40, 60, 80, 100, 200)
-#modes = c("perennial", "seasonal")
-#seeds = 3
-
-# Computed
-burn_in = start_year - burn_in_years
-outdoor = outdoor_biting
-indoor = 1.0 - outdoor
-
-# Define functional form of non-perennial, seasonal setting
+# Define functional form of non-perennial seasonal setting
 season_daily = 1 + sin(2 * pi * ((1 : 365) / 365))
 season_month = season_daily[round(1 + seq(0, 365, length.out = 13))[-13]]
 season_month = season_month / max(season_month)
@@ -74,7 +45,7 @@ season_month = season_month / max(season_month)
 # return a list of scenarios
 create_scenarios <- function()
 {
-    count = 1
+    id = 1
     scenarios = list()
     for(scaffold in scaffolds)
     {
@@ -100,20 +71,18 @@ create_scenarios <- function()
                     
                     if(mode == "seasonal") seasonality = season_month
                     else if(mode == "perennial") seasonality = replicate(12, 1)
-                    else print("unknown mode:", mode)
+                    else message("Error: unknown mode ", mode)
                     
                     for(i in 1:12)
-                    {
-                        pattern = paste0("@seasonality", i, "@")
-                        scenario = gsub(pattern = pattern, replace = seasonality[i], x = scenario)
-                    }
+                        scenario = gsub(pattern = paste0("@seasonality", i, "@"), replace = seasonality[i], x = scenario)
                     
-                    writeLines(scenario, con=paste0(experiment, "/xml/", count, ".xml"))
+                    # write xml
+                    writeLines(scenario, con=paste0(experiment, "/xml/", id, ".xml"))
                     
-                    scenario_metadata = list(scaffoldName = scaffold, eir = eir, seed = seed, mode = mode, count = count)
+                    scenario_metadata = list(scaffoldName = scaffold, eir = eir, seed = seed, mode = mode, id = id)
                     scenarios = append(scenarios, list(scenario_metadata))
                     
-                    count = count + 1
+                    id = id + 1
                 }
             }
         }
@@ -122,7 +91,7 @@ create_scenarios <- function()
     return(scenarios)
 }
 
-if (do_run == TRUE)
+if (do$run == TRUE)
 {
     message("Cleaning Tree...")
     unlink(experiment, recursive=TRUE)
@@ -139,7 +108,7 @@ if (do_run == TRUE)
     write.csv(do.call(rbind, scenarios), paste0(experiment, "/scenarios.csv"), row.names=FALSE)
 }
 
-if (do_extract == TRUE)
+if (do$extract == TRUE)
 {
     message("Extracting results...")
     unlink(paste0(experiment, "/output.csv"))
