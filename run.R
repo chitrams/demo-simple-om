@@ -3,9 +3,9 @@ run_scicore <- function(scenarios, experiment, om, sciCORE)
     commands = list()
     for(scenario in scenarios)
     {
-        id = scenario$id
-        outputfile = paste0("txt/", scenario$id, ".txt")
-        command = paste0("openMalaria -s xml/", id, ".xml --output ", outputfile)
+        index = scenario$index
+        outputfile = paste0("txt/", scenario$index, ".txt")
+        command = paste0("openMalaria -s xml/", index, ".xml --output ", outputfile)
         full_command = paste0("export PATH=$PATH:", om$path, " && ", command)
         commands = append(commands, full_command)
     }
@@ -34,10 +34,10 @@ run_local <- function(scenarios, experiment, om)
     
     foreach(i=1:n, .combine = 'c') %dopar% {
         scenario = scenarios[[i]]
-        id = scenario$id
+        index = scenario$index
         
-        outputfile = paste0("txt/", scenario$id, ".txt")
-        command = paste0("openMalaria -s xml/", id, ".xml --output ", outputfile)
+        outputfile = paste0("txt/", scenario$index, ".txt")
+        command = paste0("openMalaria -s xml/", index, ".xml --output ", outputfile)
         full_command = paste0("export PATH=$PATH:", om$path, " && cd ", experiment, " && ", command)
         system(full_command, ignore.stdout = TRUE, ignore.stderr = TRUE)
         NULL

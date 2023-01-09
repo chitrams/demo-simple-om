@@ -10,20 +10,33 @@ source("extract.R")
 pacman::p_load(char = c("foreach", "doParallel"))
 
 # sciCORE Slurm parameters:
-sciCORE = list(use = TRUE, account = "penny", jobName = "OpenMalaria")
+sciCORE = list(
+    use = TRUE,
+    account = "penny",
+    jobName = "OpenMalaria"
+)
 
 # OpenMalaria
-om = list(version = 44, path = "/home/acavelan/git/om-dev/fitting/om/openMalaria-44.0")
+om = list(
+    version = 44,
+    path = "/home/acavelan/git/om-dev/fitting/om/openMalaria-44.0"
+)
 if (sciCORE$use == TRUE) om$path = "/scicore/home/chitnis/GROUP/openMalaria-44.0/"
 
 # Scaffold xmls to use
-scaffolds = list("R0000GA")
+scaffolds = list(
+    "R0000GA"
+)
 
 # run scenarios, extract the data, or both
-do = list(run = FALSE, extract = TRUE)
+do = list(
+    run = FALSE, 
+    extract = TRUE
+)
+
+experiment = 'test' # name of the experiment folder
 
 # Fixed parameters for all xmls
-experiment = 'test' # name of the experiment folder
 pop_size = 10000 # number of humans
 start_year = 2000 # start of the monitoring period
 end_year = 2020 # end of the monitoring period
@@ -45,7 +58,7 @@ season_month = season_month / max(season_month)
 # return a list of scenarios
 create_scenarios <- function()
 {
-    id = 1
+    index = 1
     scenarios = list()
     for(scaffold in scaffolds)
     {
@@ -77,12 +90,12 @@ create_scenarios <- function()
                         scenario = gsub(pattern = paste0("@seasonality", i, "@"), replace = seasonality[i], x = scenario)
                     
                     # write xml
-                    writeLines(scenario, con=paste0(experiment, "/xml/", id, ".xml"))
+                    writeLines(scenario, con=paste0(experiment, "/xml/", index, ".xml"))
                     
-                    scenario_metadata = list(scaffoldName = scaffold, eir = eir, seed = seed, mode = mode, id = id)
+                    scenario_metadata = list(scaffoldName = scaffold, eir = eir, seed = seed, mode = mode, index = index)
                     scenarios = append(scenarios, list(scenario_metadata))
                     
-                    id = id + 1
+                    index = index + 1
                 }
             }
         }
