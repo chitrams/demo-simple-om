@@ -4,8 +4,8 @@
 #SBATCH --time=00:30:00
 #SBATCH --account=@account@
 #SBATCH --qos=30min
-#SBATCH --output=log/%a.err #/dev/null #%A_%a.err
-#SBATCH --error=log/%a.err #/dev/null #%A_%a.out
+#SBATCH --output=log/%a.err #/dev/null
+#SBATCH --error=log/%a.out #/dev/null
 #SBATCH --mem=1G
 #SBATCH --array=1-@N@%1000
 
