@@ -30,8 +30,8 @@ scaffolds = list(
 
 # run scenarios, extract the data, or both
 do = list(
-    run = FALSE, 
-    extract = FALSE,
+    run = TRUE, 
+    extract = TRUE,
     example = TRUE
 )
 
@@ -114,6 +114,7 @@ if (do$run == TRUE)
     dir.create(paste0(experiment, "/xml"))
     dir.create(paste0(experiment, "/txt"))
     dir.create(paste0(experiment, "/fig"))
+    dir.create(paste0(experiment, "/log"))
     
     message("Creating scenarios...")
     scenarios = create_scenarios()
