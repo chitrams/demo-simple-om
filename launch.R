@@ -7,7 +7,7 @@ source("run.R")
 source("extract.R")
 
 # Load all required packages, installing them if required
-pacman::p_load(char = c("foreach", "doParallel"))
+pacman::p_load(char = c("foreach", "doParallel", "dplyr"))
 
 # sciCORE Slurm parameters:
 sciCORE = list(
@@ -31,13 +31,14 @@ scaffolds = list(
 # run scenarios, extract the data, or both
 do = list(
     run = FALSE, 
-    extract = TRUE
+    extract = FALSE,
+    example = TRUE
 )
 
 experiment = 'test' # name of the experiment folder
 
 # Fixed parameters for all xmls
-pop_size = 10000 # number of humans
+pop_size = 2000 # number of humans
 start_year = 2000 # start of the monitoring period
 end_year = 2020 # end of the monitoring period
 burn_in = start_year - 30 # additional burn in time
@@ -46,16 +47,16 @@ outdoor = 0.2
 indoor = 1.0 - outdoor
 
 # Varying parameters (combinatorial experiment)
-seeds = 10
+seeds = 3
 modes = c("perennial", "seasonal")
-eirs = c(0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 22, 25, 30, 35, 40, 45, 50, 65, 70, 80, 90, 100, 120, 150, 200, 250, 500, 750, 1000)
+eirs = c(5, 20, 40, 60, 100, 200)
 
 # Define functional form of non-perennial seasonal setting
 season_daily = 1 + sin(2 * pi * ((1 : 365) / 365))
 season_month = season_daily[round(1 + seq(0, 365, length.out = 13))[-13]]
 season_month = season_month / max(season_month)
 
-# return a list of scenarios
+# Return a list of scenarios
 create_scenarios <- function()
 {
     index = 1
@@ -92,6 +93,7 @@ create_scenarios <- function()
                     # write xml
                     writeLines(scenario, con=paste0(experiment, "/xml/", index, ".xml"))
                     
+                    # add the scenario to the list, only the 'index' field is mandatory, see example at the end
                     scenario_metadata = list(scaffoldName = scaffold, eir = eir, seed = seed, mode = mode, index = index)
                     scenarios = append(scenarios, list(scenario_metadata))
                     
@@ -130,4 +132,29 @@ if (do$extract == TRUE)
     write.csv(df, paste0(experiment, "/output.csv"), row.names=FALSE)
 }
 
-message("Done")
+if (do$example == TRUE)
+{
+    scenarios = read.csv(paste0(experiment, "/scenarios.csv"))
+    d = read.csv(paste0(experiment, "/output.csv"))
+    
+    # remove NA values
+    d = d[complete.cases(d), ]
+    
+    # remove first survey
+    d = d[!d$survey == 1,]
+    
+    # sum up surveys
+    d = d %>% 
+        group_by(index, measure, ageGroup) %>% 
+        summarise(value = sum(value), .groups = 'drop')
+    
+    # adjust nHosts for age_group 0-1
+    d[d$ageGroup == 1 & d$measure == 0, ]['value'] = d[d$ageGroup == 1 & d$measure == 0, ]['value'] * 0.5
+    
+    # merge with the scenarios to have more metadata
+    d = merge(d, scenarios, by = 'index')
+    
+    # summarised scenario_1
+    scenario_1 = d[d$index == 1, ]
+}
+
