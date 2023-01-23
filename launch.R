@@ -19,9 +19,9 @@ sciCORE = list(
 # OpenMalaria
 om = list(
     version = 45,
-    path = "/home/acavelan/git/om-dev/fitting/om/openMalaria-45.0"
+    path = "path_to_OpenMalaria45"
 )
-if (sciCORE$use == TRUE) om$path = "/scicore/home/penny/GROUP/OM_schema45"
+if (sciCORE$use == TRUE) om$path = "path_to_OpenMalaria45"
 
 # Scaffold xmls to use
 scaffolds = list(
