@@ -11,7 +11,7 @@
 
 export LMOD_DISABLE_SAME_NAME_AUTOSWAP=no
 
-ml OpenMalaria/44.0-iomkl-2019.01
+ml OpenMalaria/45.0-iomkl-2019.01
 
 SEEDFILE="commands.txt"
 SEED=$(sed -n ${SLURM_ARRAY_TASK_ID}p $SEEDFILE)

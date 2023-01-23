@@ -18,10 +18,10 @@ sciCORE = list(
 
 # OpenMalaria
 om = list(
-    version = 44,
-    path = "/home/acavelan/git/om-dev/fitting/om/openMalaria-44.0"
+    version = 45,
+    path = "/home/acavelan/git/om-dev/fitting/om/openMalaria-45.0"
 )
-if (sciCORE$use == TRUE) om$path = "/scicore/home/chitnis/GROUP/openMalaria-44.0/"
+if (sciCORE$use == TRUE) om$path = "/scicore/home/penny/GROUP/OM_schema45"
 
 # Scaffold xmls to use
 scaffolds = list(
@@ -30,8 +30,8 @@ scaffolds = list(
 
 # run scenarios, extract the data, or both
 do = list(
-    run = TRUE, 
-    extract = TRUE,
+    run = FALSE, 
+    extract = FALSE,
     example = TRUE
 )
 
