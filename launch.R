@@ -7,7 +7,7 @@ source("run.R")
 source("extract.R")
 
 # Load all required packages, installing them if required
-pacman::p_load(char = c("foreach", "doParallel", "dplyr"))
+pacman::p_load(char = c("foreach", "doParallel", "dplyr", "data.table"))
 
 # sciCORE Slurm parameters:
 sciCORE = list(
@@ -19,9 +19,8 @@ sciCORE = list(
 # OpenMalaria
 om = list(
     version = 45,
-    path = "path_to_OpenMalaria45"
+    path = "/scicore/home/penny/GROUP/OpenMalaria/OM_schema45/"
 )
-if (sciCORE$use == TRUE) om$path = "path_to_OpenMalaria45"
 
 # Scaffold xmls to use
 scaffolds = list(
@@ -31,8 +30,8 @@ scaffolds = list(
 # run scenarios, extract the data, or both
 do = list(
     run = FALSE, 
-    extract = FALSE,
-    example = TRUE
+    extract = TRUE,
+    example = FALSE
 )
 
 experiment = 'test' # name of the experiment folder
@@ -47,9 +46,9 @@ outdoor = 0.2
 indoor = 1.0 - outdoor
 
 # Varying parameters (combinatorial experiment)
-seeds = 3
+seeds = 10
 modes = c("perennial", "seasonal")
-eirs = c(5, 20, 40, 60, 100, 200)
+eirs = c(5, 10, 15, 20, 40, 60, 80, 100, 150, 200)
 
 # Define functional form of non-perennial seasonal setting
 season_daily = 1 + sin(2 * pi * ((1 : 365) / 365))
@@ -121,22 +120,32 @@ if (do$run == TRUE)
     
     message("Running scenarios...")
     run_scenarios(scenarios, experiment, om, sciCORE)
-    write.csv(do.call(rbind, scenarios), paste0(experiment, "/scenarios.csv"), row.names=FALSE)
+    fwrite(do.call(rbind, scenarios), paste0(experiment, "/scenarios.csv"))
 }
 
 if (do$extract == TRUE)
 {
     message("Extracting results...")
     unlink(paste0(experiment, "/output.csv"))
-    scenarios = read.csv(paste0(experiment, "/scenarios.csv"))
+    scenarios = fread(paste0(experiment, "/scenarios.csv"))
+    
+    start.time <- Sys.time()
     df = to_df(scenarios, experiment)
-    write.csv(df, paste0(experiment, "/output.csv"), row.names=FALSE)
+    end.time <- Sys.time()
+    time.taken <- end.time - start.time
+    message("Extract time: ", time.taken)
+    
+    start.time <- Sys.time()
+    fwrite(df, paste0(experiment, "/output.csv"))
+    end.time <- Sys.time()
+    time.taken <- end.time - start.time
+    message("Write time: ", time.taken)
 }
 
 if (do$example == TRUE)
 {
-    scenarios = read.csv(paste0(experiment, "/scenarios.csv"))
-    d = read.csv(paste0(experiment, "/output.csv"))
+    scenarios = fread(paste0(experiment, "/scenarios.csv"))
+    d = fread(paste0(experiment, "/output.csv"))
     
     # remove NA values
     d = d[complete.cases(d), ]
