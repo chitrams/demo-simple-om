@@ -7,7 +7,7 @@
 #SBATCH --output=log/%a.err #/dev/null
 #SBATCH --error=log/%a.out #/dev/null
 #SBATCH --mem=1G
-#SBATCH --array=1-@N@%1000
+#SBATCH --array=@START@-@END@%1000
 
 export LMOD_DISABLE_SAME_NAME_AUTOSWAP=no
 

@@ -13,14 +13,25 @@ run_scicore <- function(scenarios, experiment, om, sciCORE)
     
     n = length(scenarios)
     
-    script = readLines("job.sh")
-    script = gsub(pattern = "@N@", replace = n, x = script)
-    script = gsub(pattern = "@account@", replace = sciCORE$account, x = script)
-    script = gsub(pattern = "@jobname@", replace = sciCORE$jobName, x = script)
+    scriptTemplate = readLines("job.sh")
     
-    writeLines(script, con=paste0(experiment, "/start_array_job.sh"))
-    
-    system(paste0("cd ", experiment, " && sbatch --wait start_array_job.sh"))
+    maxJobs = 50000
+    start <- 1
+    end <- 1
+    while (end < n) {
+        start <- end
+        end <- min(start+maxJobs, n)
+
+        script = scriptTemplate
+        script = gsub(pattern = "@START@", replace = start, x = script)
+        script = gsub(pattern = "@END@", replace = end, x = script)
+        script = gsub(pattern = "@account@", replace = sciCORE$account, x = script)
+        script = gsub(pattern = "@jobname@", replace = sciCORE$jobName, x = script)
+        writeLines(script, con=paste0(experiment, "/start_array_job_", start, "_", end, ".sh"))
+        
+        message("Launching array job from ", start, " to ", end)
+        system(paste0("cd ", experiment, " && sbatch --wait start_array_job_", start, "_", end, ".sh"))
+    }
 }
 
 run_local <- function(scenarios, experiment, om)

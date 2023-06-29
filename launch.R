@@ -29,9 +29,9 @@ scaffolds = list(
 
 # run scenarios, extract the data, or both
 do = list(
-    run = FALSE, 
+    run = TRUE, 
     extract = TRUE,
-    example = FALSE
+    example = TRUE
 )
 
 experiment = 'test' # name of the experiment folder
@@ -49,6 +49,11 @@ indoor = 1.0 - outdoor
 seeds = 10
 modes = c("perennial", "seasonal")
 eirs = c(5, 10, 15, 20, 40, 60, 80, 100, 150, 200)
+
+# Varying parameters (combinatorial experiment)
+seeds = 3
+modes = c("perennial")
+eirs = c(5, 20, 50, 100, 200)
 
 # Define functional form of non-perennial seasonal setting
 season_daily = 1 + sin(2 * pi * ((1 : 365) / 365))
@@ -120,7 +125,7 @@ if (do$run == TRUE)
     
     message("Running scenarios...")
     run_scenarios(scenarios, experiment, om, sciCORE)
-    fwrite(do.call(rbind, scenarios), paste0(experiment, "/scenarios.csv"))
+    fwrite(rbindlist(scenarios), paste0(experiment, "/scenarios.csv"))
 }
 
 if (do$extract == TRUE)
@@ -135,11 +140,17 @@ if (do$extract == TRUE)
     time.taken <- end.time - start.time
     message("Extract time: ", time.taken)
     
-    start.time <- Sys.time()
-    fwrite(df, paste0(experiment, "/output.csv"))
-    end.time <- Sys.time()
-    time.taken <- end.time - start.time
-    message("Write time: ", time.taken)
+    if(nrow(df) == 0) {
+        message("Error: extraction failed, output dataframe is empty")
+        message("       output.csv not saved")
+    }
+    else {
+        start.time <- Sys.time()
+        fwrite(df, paste0(experiment, "/output.csv"))
+        end.time <- Sys.time()
+        time.taken <- end.time - start.time
+        message("Write time: ", time.taken)
+    }
 }
 
 if (do$example == TRUE)
