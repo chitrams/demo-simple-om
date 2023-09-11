@@ -37,7 +37,7 @@ do = list(
 experiment = 'test' # name of the experiment folder
 
 # Fixed parameters for all xmls
-pop_size = 2000 # number of humans
+pop_size = 10000 # number of humans
 start_year = 2000 # start of the monitoring period
 end_year = 2020 # end of the monitoring period
 burn_in = start_year - 30 # additional burn in time
@@ -50,10 +50,11 @@ seeds = 10
 modes = c("perennial", "seasonal")
 eirs = c(5, 10, 15, 20, 40, 60, 80, 100, 150, 200)
 
-# Varying parameters (combinatorial experiment)
-seeds = 3
-modes = c("perennial")
-eirs = c(5, 20, 50, 100, 200)
+# For a quick test
+# pop_size = 2000
+# seeds = 3
+# modes = c("perennial")
+# eirs = c(5, 20, 50, 100, 200)
 
 # Define functional form of non-perennial seasonal setting
 season_daily = 1 + sin(2 * pi * ((1 : 365) / 365))
@@ -122,10 +123,10 @@ if (do$run == TRUE)
     
     message("Creating scenarios...")
     scenarios = create_scenarios()
+    fwrite(rbindlist(scenarios), paste0(experiment, "/scenarios.csv"))
     
     message("Running scenarios...")
     run_scenarios(scenarios, experiment, om, sciCORE)
-    fwrite(rbindlist(scenarios), paste0(experiment, "/scenarios.csv"))
 }
 
 if (do$extract == TRUE)
