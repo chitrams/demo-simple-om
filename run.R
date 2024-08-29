@@ -1,5 +1,8 @@
-run_scicore <- function(scenarios, experiment, om, sciCORE)
+run_HPC <- function(scenarios, experiment, om, NTASKS)
 {
+    file.copy(paste0(om$path, "/densities.csv"), paste0(experiment, "/"))
+    file.copy(paste0(om$path, "/scenario_", om$version, ".xsd"), paste0(experiment, "/"))
+  
     commands = list()
     for(scenario in scenarios)
     {
@@ -13,25 +16,14 @@ run_scicore <- function(scenarios, experiment, om, sciCORE)
     
     n = length(scenarios)
     
-    scriptTemplate = readLines("job.sh")
+    NTASKS = min(n, NTASKS)
     
-    maxJobs = 50000
-    start <- 1
-    end <- 1
-    while (end < n) {
-        start <- end
-        end <- min(start+maxJobs, n)
+    script = readLines("job.sh")
+    script = gsub(pattern = "@NTASKS@", replace = NTASKS, x = script)
 
-        script = scriptTemplate
-        script = gsub(pattern = "@START@", replace = start, x = script)
-        script = gsub(pattern = "@END@", replace = end, x = script)
-        script = gsub(pattern = "@account@", replace = sciCORE$account, x = script)
-        script = gsub(pattern = "@jobname@", replace = sciCORE$jobName, x = script)
-        writeLines(script, con=paste0(experiment, "/start_array_job_", start, "_", end, ".sh"))
-        
-        message("Launching array job from ", start, " to ", end)
-        system(paste0("cd ", experiment, " && sbatch --wait start_array_job_", start, "_", end, ".sh"))
-    }
+    writeLines(script, con=paste0(experiment, "/start_array_job.sh"))
+    
+    system(paste0("cd ", experiment, " && sbatch --wait start_array_job.sh"))
 }
 
 run_local <- function(scenarios, experiment, om)
@@ -55,13 +47,4 @@ run_local <- function(scenarios, experiment, om)
     }
     
     stopCluster(cluster)
-}
-
-run_scenarios <- function(scenarios, experiment, om, sciCORE)
-{
-    file.copy(paste0(om$path, "/densities.csv"), paste0(experiment, "/"))
-    file.copy(paste0(om$path, "/scenario_", om$version, ".xsd"), paste0(experiment, "/"))
-    
-    if(sciCORE$use == TRUE) run_scicore(scenarios, experiment, om, sciCORE)
-    else run_local(scenarios, experiment, om)
 }
