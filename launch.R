@@ -18,8 +18,8 @@ sciCORE = list(
 
 # OpenMalaria
 om = list(
-    version = 45,
-    path = "/scicore/home/penny/GROUP/OpenMalaria/OM_schema45/"
+    version = 47,
+    path = "/Users/chitrams/Documents/local-workbench/om47/openMalaria-47.0"
 )
 
 # Scaffold xmls to use
