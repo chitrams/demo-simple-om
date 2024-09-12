@@ -11,7 +11,7 @@ pacman::p_load(char = c("foreach", "doParallel", "dplyr", "data.table"))
 
 # sciCORE Slurm parameters:
 sciCORE = list(
-    use = TRUE,
+    use = FALSE,
     account = "penny",
     jobName = "OpenMalaria"
 )
@@ -34,7 +34,7 @@ do = list(
     example = TRUE
 )
 
-experiment = 'test' # name of the experiment folder
+experiment = 'chitra-experiment' # name of the experiment folder
 
 # Fixed parameters for all xmls
 pop_size = 1000 # number of humans
