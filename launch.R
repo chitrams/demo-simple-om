@@ -19,7 +19,7 @@ sciCORE = list(
 # OpenMalaria
 om = list(
     version = 47,
-    path = "/Users/chitrams/Documents/local-workbench/om47/openMalaria-47.0"
+    path = "/Users/chitrams/Documents/local-workbench/om47/build/"
 )
 
 # Scaffold xmls to use
@@ -31,10 +31,10 @@ scaffolds = list(
 do = list(
     run = TRUE, 
     extract = TRUE,
-    example = TRUE
+    example = F
 )
 
-experiment = 'chitra-experiment' # name of the experiment folder
+experiment = 'chitra-experiment2' # name of the experiment folder
 
 # Fixed parameters for all xmls
 pop_size = 1000 # number of humans
@@ -126,8 +126,8 @@ if (do$run == TRUE)
     fwrite(rbindlist(scenarios), paste0(experiment, "/scenarios.csv"))
     
     message("Running scenarios...")
-    # run_scenarios(scenarios, experiment, om, sciCORE)
-    run_local(scenarios, experiment, om)
+    run_scenarios(scenarios, experiment, om, sciCORE)
+    # run_local(scenarios, experiment, om)
 }
 
 if (do$extract == TRUE)

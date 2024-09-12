@@ -59,8 +59,8 @@ run_local <- function(scenarios, experiment, om)
 
 run_scenarios <- function(scenarios, experiment, om, sciCORE)
 {
-    file.copy(paste0(om$path, "/densities.csv"), paste0(experiment, "/"))
-    file.copy(paste0(om$path, "/scenario_", om$version, ".xsd"), paste0(experiment, "/"))
+    file.copy(paste0(om$path, "../test/densities.csv"), paste0(experiment, "/"))
+    file.copy(paste0(om$path, "../schema/scenario_", om$version, ".xsd"), paste0(experiment, "/"))
     
     if(sciCORE$use == TRUE) run_scicore(scenarios, experiment, om, sciCORE)
     else run_local(scenarios, experiment, om)
