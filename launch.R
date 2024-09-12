@@ -126,7 +126,8 @@ if (do$run == TRUE)
     fwrite(rbindlist(scenarios), paste0(experiment, "/scenarios.csv"))
     
     message("Running scenarios...")
-    run_scenarios(scenarios, experiment, om, sciCORE)
+    # run_scenarios(scenarios, experiment, om, sciCORE)
+    run_local(scenarios, experiment, om)
 }
 
 if (do$extract == TRUE)
