@@ -37,16 +37,16 @@ do = list(
 experiment = 'test' # name of the experiment folder
 
 # Fixed parameters for all xmls
-pop_size = 10000 # number of humans
-start_year = 2000 # start of the monitoring period
+pop_size = 1000 # number of humans
+start_year = 2010 # start of the monitoring period
 end_year = 2020 # end of the monitoring period
-burn_in = start_year - 30 # additional burn in time
+burn_in = start_year - 10 # additional burn in time
 access = 0.2029544 # 5-day probability of access to care
 outdoor = 0.2
 indoor = 1.0 - outdoor
 
 # Varying parameters (combinatorial experiment)
-seeds = 10
+seeds = 5
 modes = c("perennial", "seasonal")
 eirs = c(5, 10, 15, 20, 40, 60, 80, 100, 150, 200)
 
