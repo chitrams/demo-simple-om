@@ -35,14 +35,14 @@ run_local <- function(scenarios, experiment, om)
     cluster = makeCluster(n_cores, type="FORK")  
     registerDoParallel(cluster)  
     
-    foreach(i=1:n, .combine = 'c') %dopar% {
+    foreach(i=1:n, .combine = 'c') %do% {
         scenario = scenarios[[i]]
         index = scenario$index
         
         outputfile = paste0("txt/", scenario$index, ".txt")
         command = paste0("openMalaria -s xml/", index, ".xml --output ", outputfile)
         full_command = paste0("export PATH=$PATH:", om$path, " && cd /Users/chitrams/Documents/local-workbench/simple-om/test-folder && ", command)
-        system(full_command, ignore.stdout = TRUE, ignore.stderr = TRUE)
+        system(full_command)
         NULL
     }
     
