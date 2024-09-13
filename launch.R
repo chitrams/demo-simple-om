@@ -127,7 +127,6 @@ if (do$run == TRUE)
     
     message("Running scenarios...")
     run_scenarios(scenarios, experiment, om, sciCORE)
-    # run_local(scenarios, experiment, om)
 }
 
 if (do$extract == TRUE)
