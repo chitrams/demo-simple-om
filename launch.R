@@ -1,3 +1,5 @@
+# Variables for users to change are tagged with #TODO
+
 # Clear global environment
 rm(list = ls())
 
@@ -11,6 +13,9 @@ pacman::p_load(char = c("foreach", "doParallel", "dplyr", "data.table"))
 
 # sciCORE Slurm parameters:
 sciCORE = list(
+  #TODO - On a supercomputer, or locally? See run.R
+  # use = T if running on an HPC
+  # use = F if running locally
     use = FALSE,
     account = "penny",
     jobName = "OpenMalaria"
@@ -18,6 +23,7 @@ sciCORE = list(
 
 # OpenMalaria
 om = list(
+  #TODO - Where is your OpenMalaria, and which version?
     version = 47,
     path = "/Users/chitrams/Documents/local-workbench/om47/build/"
 )
@@ -34,27 +40,27 @@ do = list(
     example = F
 )
 
-experiment = 'chitra-experiment2' # name of the experiment folder
+experiment = 'local-experiment' # name of the experiment folder
 
 # Fixed parameters for all xmls
-pop_size = 1000 # number of humans
-start_year = 2010 # start of the monitoring period
-end_year = 2020 # end of the monitoring period
-burn_in = start_year - 10 # additional burn in time
-access = 0.2029544 # 5-day probability of access to care
-outdoor = 0.2
-indoor = 1.0 - outdoor
-
-# Varying parameters (combinatorial experiment)
-seeds = 5
-modes = c("perennial", "seasonal")
-eirs = c(5, 10, 15, 20, 40, 60, 80, 100, 150, 200)
+# pop_size = 1000 # number of humans
+# start_year = 2010 # start of the monitoring period
+# end_year = 2020 # end of the monitoring period
+# burn_in = start_year - 10 # additional burn in time
+# access = 0.2029544 # 5-day probability of access to care
+# outdoor = 0.2
+# indoor = 1.0 - outdoor
+# 
+# # Varying parameters (combinatorial experiment)
+# seeds = 5
+# modes = c("perennial", "seasonal")
+# eirs = c(5, 10, 15, 20, 40, 60, 80, 100, 150, 200)
 
 # For a quick test
-# pop_size = 2000
-# seeds = 3
-# modes = c("perennial")
-# eirs = c(5, 20, 50, 100, 200)
+pop_size = 2000
+seeds = 3
+modes = c("perennial")
+eirs = c(5, 20, 50, 100, 200)
 
 # Define functional form of non-perennial seasonal setting
 season_daily = 1 + sin(2 * pi * ((1 : 365) / 365))
