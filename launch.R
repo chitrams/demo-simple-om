@@ -122,8 +122,8 @@ if (do$run == TRUE)
     fwrite(rbindlist(scenarios), paste0(experiment, "/scenarios.csv"))
     
     message("Running scenarios...")
-    # run_HPC(scenarios, experiment, om, NTASKS)
-    run_local(scenarios, experiment, om)
+    run_HPC(scenarios, experiment, om, NTASKS)
+    # run_local(scenarios, experiment, om)
 }
 
 if (do$extract == TRUE)
