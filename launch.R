@@ -30,7 +30,7 @@ do = list(
     example = FALSE
 )
 
-experiment = '09-19-test' # name of the experiment folder
+experiment = 'local-09-19' # name of the experiment folder
 
 # Fixed parameters for all xmls
 pop_size = 1000 # number of humans
