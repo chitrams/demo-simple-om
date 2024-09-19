@@ -14,8 +14,8 @@ NTASKS = 100
 # OpenMalaria
 om = list(
     version = 47,
-    path = "/software/projects/pawsey0010/chitrams/om-support",
-    exe = "/software/projects/pawsey0010/chitrams/openmalaria_47.0.sif"
+    path = "/software/projects/pawsey1104/GROUP/OpenMalaria_47",
+    exe = "/software/projects/pawsey1104/GROUP/OpenMalaria_47/openmalaria_47.0.sif"
 )
 
 # Scaffold xmls to use
