@@ -8,7 +8,7 @@ run_HPC <- function(scenarios, experiment, om, NTASKS)
     {
         index = scenario$index
         outputfile = paste0("txt/", scenario$index, ".txt")
-        command = paste0("openMalaria -s xml/", index, ".xml --output ", outputfile)
+        command = paste0(om$exe, " -s xml/", index, ".xml --output ", outputfile)
         full_command = paste0("export PATH=$PATH:", om$path, " && ", command)
         commands = append(commands, full_command)
     }

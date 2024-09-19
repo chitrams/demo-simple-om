@@ -14,8 +14,8 @@ NTASKS = 100
 # OpenMalaria
 om = list(
     version = 47,
-    path = "/Users/chitrams/Documents/local-workbench/om47/openMalaria-47.0",
-    exe = "/Users/chitrams/Documents/local-workbench/om47/openMalaria-47.0/openMalaria"
+    path = "/software/projects/pawsey0010/chitrams/om-support",
+    exe = "/software/projects/pawsey0010/chitrams/openmalaria_47.0.sif"
 )
 
 # Scaffold xmls to use
@@ -27,10 +27,10 @@ scaffolds = list(
 do = list(
     run = TRUE, 
     extract = TRUE,
-    example = TRUE
+    example = FALSE
 )
 
-experiment = 'test-folder' # name of the experiment folder
+experiment = '09-19-test' # name of the experiment folder
 
 # Fixed parameters for all xmls
 pop_size = 1000 # number of humans
@@ -42,15 +42,15 @@ outdoor = 0.2
 indoor = 1.0 - outdoor
 
 # Varying parameters (combinatorial experiment)
-seeds = 5
-modes = c("perennial", "seasonal")
-eirs = c(5, 10, 15, 20, 40, 60, 80, 100, 150, 200)
-
-# For a quick test
-pop_size = 2000
 seeds = 3
 modes = c("perennial")
-eirs = c(5, 20, 50, 100, 200)
+eirs = c(5, 20, 50, 100)
+
+# For a quick test
+# pop_size = 2000
+# seeds = 3
+# modes = c("perennial")
+# eirs = c(5, 20, 50, 100, 200)
 
 # Define functional form of non-perennial seasonal setting
 season_daily = 1 + sin(2 * pi * ((1 : 365) / 365))
