@@ -1,7 +1,8 @@
 # A simple(r) demo R workflow to run OpenMalaria
 
 
-This is a demo workflow to run OpenMalaria from within RStudio. The
+This is a demo workflow to run OpenMalaria from within RStudio, based on
+[Aurélien’s repo](https://github.com/acavelan/OpenMalariaRWorkflow). The
 purpose of this repo is to be instructional so someone new to
 OpenMalaria can run a relatively simple workflow within RStudio, but not
 as simple as the wiki-provided:
@@ -21,9 +22,12 @@ This README will walk you through:
 
 ## Set up RStudio
 
-Open the file
-[`start_rstudio.sh`](https://github.com/chitrams/demo-simple-om/blob/main/start_rstudio.sh).
-This script will create an SSH tunnel to Setonix on your 8787 port.
+Open the script
+[`start_rstudio_mac.sh`](https://github.com/chitrams/demo-simple-om/blob/main/start_rstudio_mac.sh)
+if you use a Mac, or
+[`start_rstudio_linux.sh`](https://github.com/chitrams/demo-simple-om/blob/main/start_rstudio_linux.sh)
+if you’re on Linux . This script will create an SSH tunnel to Setonix on
+your 8787 port.
 
 What you need to change in this script is the USERNAME on line 4.
 
@@ -31,15 +35,15 @@ Then run:
 
 ``` bash
 # Change the file permission so you can execute the script:
-chmod +x start_rstudio.sh
+chmod +x start_rstudio_mac.sh
 
 # After the file permission has been changed, run:
-./start_rstudio.sh
+./start_rstudio_mac.sh
 ```
 
-You only need to run `chmod +x start_rstudio.sh` once. Every other time
-you want to start RStudio on Pawsey you can simply execute it by using
-the command `./start_rstudio.sh` in your terminal.
+You only need to run `chmod +x start_rstudio_mac.sh` once. Every other
+time you want to start RStudio on Pawsey you can simply execute it by
+using the command `./start_rstudio_mac.sh` in your terminal.
 
 ## Run the workflow
 
@@ -79,7 +83,7 @@ Here is where it gets a bit gnarly. When you first run the scenarios,
 you want to set `run = TRUE` and everything else to `FALSE`. This is
 because we can’t yet access Slurm from within RStudio. I will walk you
 through the run vs extract steps in the next sub-section. Before I get
-to that, there is one more parameter you need to change:
+to that, there are a few more parameters I need to explain.
 
 ``` r
 experiment = 'local-09-19' # name of the experiment folder
@@ -87,6 +91,10 @@ experiment = 'local-09-19' # name of the experiment folder
 
 This is the name of your folder. Change it to whatever you wish. I’ve
 set mine to the name `local-09-19`.
+
+The next few lines after that are the malaria parameters. You can change
+these around as you wish; I’ve selected the ones in the current script
+for a relatively quick run (less than five minutes on the HPC).
 
 ### Running the workflow on an HPC
 
