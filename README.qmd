@@ -5,7 +5,7 @@ execute:
   eval: false
 ---
 
-This is a demo workflow to run OpenMalaria from within RStudio. The purpose of this repo is to be instructional so someone new to OpenMalaria can run a relatively simple workflow within RStudio, but not as simple as the wiki-provided:
+This is a demo workflow to run OpenMalaria from within RStudio, based on [Aurélien's repo](https://github.com/acavelan/OpenMalariaRWorkflow). The purpose of this repo is to be instructional so someone new to OpenMalaria can run a relatively simple workflow within RStudio, but not as simple as the wiki-provided:
 
 ```{bash}
 ./OpenMalaria --scenario example_scenario.xml --output output.txt
@@ -64,13 +64,15 @@ do = list(
 )
 ```
 
-Here is where it gets a bit gnarly. When you first run the scenarios, you want to set `run = TRUE` and everything else to `FALSE`. This is because we can't yet access Slurm from within RStudio. I will walk you through the run vs extract steps in the next sub-section. Before I get to that, there is one more parameter you need to change:
+Here is where it gets a bit gnarly. When you first run the scenarios, you want to set `run = TRUE` and everything else to `FALSE`. This is because we can't yet access Slurm from within RStudio. I will walk you through the run vs extract steps in the next sub-section. Before I get to that, there are a few more parameters I need to explain.
 
 ```{R}
 experiment = 'local-09-19' # name of the experiment folder
 ```
 
 This is the name of your folder. Change it to whatever you wish. I've set mine to the name `local-09-19`.
+
+The next few lines after that are the malaria parameters. You can change these around as you wish; I've selected the ones in the current script for a relatively quick run (less than five minutes on the HPC).
 
 ### Running the workflow on an HPC
 
