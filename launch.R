@@ -32,6 +32,8 @@ do = list(
 
 experiment = 'local-09-19' # name of the experiment folder
 
+# The following parameters have been chosen for a quick test.
+
 # Fixed parameters for all xmls
 pop_size = 1000 # number of humans
 start_year = 2010 # start of the monitoring period
@@ -45,12 +47,6 @@ indoor = 1.0 - outdoor
 seeds = 3
 modes = c("perennial")
 eirs = c(5, 20, 50, 100)
-
-# For a quick test
-# pop_size = 2000
-# seeds = 3
-# modes = c("perennial")
-# eirs = c(5, 20, 50, 100, 200)
 
 # Define functional form of non-perennial seasonal setting
 season_daily = 1 + sin(2 * pi * ((1 : 365) / 365))
