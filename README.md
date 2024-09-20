@@ -160,6 +160,6 @@ message("Running scenarios...")
 If you’d like to run the workflow locally, uncomment the
 `run_local()`line and comment out the `run_HPC()` line.
 
-## Requirements
+## Technical notes
 
 - I run MacOS 14.5.
