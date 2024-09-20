@@ -9,17 +9,13 @@ source("extract.R")
 # Load all required packages, installing them if required
 pacman::p_load(char = c("foreach", "doParallel", "dplyr", "data.table"))
 
-# sciCORE Slurm parameters:
-sciCORE = list(
-    use = TRUE,
-    account = "penny",
-    jobName = "OpenMalaria"
-)
+NTASKS = 100
 
 # OpenMalaria
 om = list(
-    version = 45,
-    path = "/scicore/home/penny/GROUP/OpenMalaria/OM_schema45/"
+    version = 47,
+    path = "/software/projects/pawsey1104/GROUP/OpenMalaria_47",
+    exe = "/software/projects/pawsey1104/GROUP/OpenMalaria_47/openmalaria_47.0.sif"
 )
 
 # Scaffold xmls to use
@@ -31,24 +27,24 @@ scaffolds = list(
 do = list(
     run = TRUE, 
     extract = TRUE,
-    example = TRUE
+    example = FALSE
 )
 
-experiment = 'test' # name of the experiment folder
+experiment = 'local-09-19' # name of the experiment folder
 
 # Fixed parameters for all xmls
-pop_size = 10000 # number of humans
-start_year = 2000 # start of the monitoring period
+pop_size = 1000 # number of humans
+start_year = 2010 # start of the monitoring period
 end_year = 2020 # end of the monitoring period
-burn_in = start_year - 30 # additional burn in time
+burn_in = start_year - 10 # additional burn in time
 access = 0.2029544 # 5-day probability of access to care
 outdoor = 0.2
 indoor = 1.0 - outdoor
 
 # Varying parameters (combinatorial experiment)
-seeds = 10
-modes = c("perennial", "seasonal")
-eirs = c(5, 10, 15, 20, 40, 60, 80, 100, 150, 200)
+seeds = 3
+modes = c("perennial")
+eirs = c(5, 20, 50, 100)
 
 # For a quick test
 # pop_size = 2000
@@ -126,7 +122,8 @@ if (do$run == TRUE)
     fwrite(rbindlist(scenarios), paste0(experiment, "/scenarios.csv"))
     
     message("Running scenarios...")
-    run_scenarios(scenarios, experiment, om, sciCORE)
+    run_HPC(scenarios, experiment, om, NTASKS)
+    # run_local(scenarios, experiment, om)
 }
 
 if (do$extract == TRUE)
@@ -175,8 +172,5 @@ if (do$example == TRUE)
     
     # merge with the scenarios to have more metadata
     d = merge(d, scenarios, by = 'index')
-    
-    # summarised scenario_1
-    scenario_1 = d[d$index == 1, ]
 }
 
