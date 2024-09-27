@@ -128,7 +128,7 @@ message("Running scenarios...")
     # run_local(scenarios, experiment, om)
 ```
 
-If you'd like to run the workflow locally, uncomment the `run_local()`line and comment out the `run_HPC()` line.
+If you'd like to run the workflow locally, uncomment the `run_local()` line and comment out the `run_HPC()` line.
 
 ## Technical notes
 
