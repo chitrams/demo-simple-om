@@ -56,8 +56,8 @@ lines. I will walk you through them one by one.
 # OpenMalaria
 om = list(
     version = 47,
-    path = "/software/projects/pawsey1104/GROUP/OpenMalaria_47",
-    exe = "/software/projects/pawsey1104/GROUP/OpenMalaria_47/openmalaria_47.0.sif"
+    path = "/software/projects/pawsey1104/GROUP/OpenMalaria/OM_schema47/OpenMalaria_47",
+    exe = "/software/projects/pawsey1104/GROUP/OpenMalaria/OM_schema47/OpenMalaria_47/openmalaria_47.0.sif"
 )
 ```
 
@@ -67,7 +67,7 @@ OpenMalaria are `densities.csv` and `scenario_47.xsd` in the instance of
 version 47. The executable in this instance is a Singularity Image File
 that Aurélien has built, `openmalaria_47.0.sif`.
 
-For any version changes, we will be updating the executables in that
+For any version changes, we will be updating the executables within that
 `GROUP` folder.
 
 ``` r
@@ -86,15 +86,18 @@ through the run vs extract steps in the next sub-section. Before I get
 to that, there are a few more parameters I need to explain.
 
 ``` r
-experiment = 'local-09-19' # name of the experiment folder
+experiment = 'local-experiment' # name of the experiment folder
 ```
 
 This is the name of your folder. Change it to whatever you wish. I’ve
-set mine to the name `local-09-19`.
+set mine to the name `local-experiment`. I’ve added `local*/` to the
+.gitignore file as well because these output folders tend to be quite
+large.
 
 The next few lines after that are the malaria parameters. You can change
-these around as you wish; I’ve selected the ones in the current script
-for a relatively quick run (less than five minutes on the HPC).
+these as you wish; I’ve selected the ones in the current script for a
+relatively quick run (less than five minutes on a local machine without
+parallelisation).
 
 ### Running the workflow on an HPC
 
@@ -136,20 +139,21 @@ the following:
 ``` r
 # run scenarios, extract the data, or both
 do = list(
-    run = FALSE, 
-    extract = TRUE,
+    run = FALSE,      # This is now FALSE!
+    extract = TRUE,   # This is now TRUE!
     example = FALSE
 )
 ```
 
-Now click on the ‘Source’ button again to execute the script. You should
-now have `output.csv` and `scenarios.csv` files in your output folder.
-Well done!
+click on the ‘Source’ button again to execute the script. You should now
+have `output.csv` and `scenarios.csv` files in your output folder. Well
+done!
 
 ### Option to run the workflow locally
 
 To run the workflow locally, go to the last part of the
-`if (do$run == TRUE) { ... }` part of the script. In the last section:
+`if (do$run == TRUE) { ... }` part of the script. Navigate to the last
+section:
 
 ``` r
 message("Running scenarios...")
@@ -157,8 +161,8 @@ message("Running scenarios...")
     # run_local(scenarios, experiment, om)
 ```
 
-If you’d like to run the workflow locally, uncomment the
-`run_local()`line and comment out the `run_HPC()` line.
+then uncomment the `run_local()` line and comment out the `run_HPC()`
+line.
 
 ## Technical notes
 
